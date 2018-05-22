@@ -1,0 +1,90 @@
+#!/bin/bash
+
+printf "Debian version: $(cat /etc/debian_version)\n\n"
+
+printf "OS Release Notes:\n$(cat /etc/os-release)\n\n"
+
+printf "Kernel version:\n$(uname -a)\n\n"
+
+printf "CPU info:\n$(cat /proc/cpuinfo)\n\n"
+
+target_line=$(grep -m1 ^"Revision" /proc/cpuinfo)
+revision="${target_line##*: }"
+
+printf "Model and Pi Revision:\n"
+case $revision in
+    0002)
+        echo "Model B Revision 1.0"
+        echo "256MB"
+        ;;
+    0003)
+        echo "Model B Revision 1.0 + ECN0001 (no fuses, D14 removed)"
+        echo "256MB"
+        ;;
+    0004 | 0005 | 0006)
+        echo "Model B Revision 2.0"
+        echo "Mounting holes"
+        echo "256MB"
+        ;;
+    0007 | 0008 | 0009)
+        echo "Model A"
+        echo "Mounting holes"
+        echo "256MB"
+        ;;
+    000d | 000e | 000f)
+        echo "Model B Revision 2.0"
+        echo "Mounting holes"
+        echo "512MB"
+        ;;
+    0010)
+        echo "Model B+"
+        echo "512MB"
+        ;;
+    0011)
+        echo "Compute Module"
+        echo "512MB"
+        ;;
+    0012)
+        echo "Model A+"
+        echo "256MB"
+        ;;
+    a01041)
+        echo "Pi 2 Model B"
+        echo "(Sony, UK)"
+        echo "1GB"
+        ;;
+    a21041)
+        echo "Pi 2 Model B"
+        echo "(Embest, China)"
+        echo "1GB"
+        ;;
+    900092)
+        echo "PiZero"
+        echo "(no camera connector)"
+        echo "512MB"
+        ;;
+    900093)
+        echo "PiZero"
+        echo "(camera connector)"
+        echo "512MB"
+        ;;
+    a02082)
+        echo "Pi 3 Model B"
+        echo "(Sony, UK)"
+        echo "1GB"
+        ;;
+    a22082)
+        echo "Pi 3 Model B"
+        echo "(Embest, China)"
+        echo "1GB"
+        ;;
+    9000c1)
+        echo "PiZero W"
+        echo "512MB"
+        ;;
+    *)
+        echo "Unknown"
+esac
+
+printf "\n"
+
