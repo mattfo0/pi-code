@@ -1,0 +1,29 @@
+#!/bin/bash
+
+PIN="${1}"
+
+if [ -z "${PIN}" ]; then
+    printf "\nERROR: Missing first argument: pin number\n"
+    exit 1
+fi
+
+printf "Checking if pin ${PIN} is already exported ... "
+
+PIN_DIR="/sys/class/gpio/gpio${PIN}"
+if [ -f "${PIN_DIR}/value" ]; then
+    printf "yes\n\n"
+
+    printf "Unexporting pin ${PIN} ... "
+
+    echo "${PIN}" > /sys/class/gpio/unexport
+
+    if [ -f "${PIN_DIR}" ]; then
+        printf "FAILED\n\nERROR: Failed to unexport pin ${PIN}\n\n"
+        exit 1
+    else
+        printf "done\n\n"
+    fi
+else
+    printf "no\n\nNothing to unexport\n\n"
+fi
+
