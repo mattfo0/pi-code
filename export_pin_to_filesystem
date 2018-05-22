@@ -1,0 +1,31 @@
+#!/bin/bash
+
+PIN="${1}"
+
+if [ -z "${PIN}" ]; then
+    printf "\nERROR: Missing first argument: pin number\n"
+    exit 1
+fi
+
+printf "Checking if pin ${PIN} is already exported ... "
+
+PIN_DIR="/sys/class/gpio/gpio${PIN}"
+if [ -f "${PIN_DIR}/value" ]; then
+    printf "yes\n\n"
+else
+    printf "no\n\n"
+
+    echo "${PIN}" > /sys/class/gpio/export
+
+    if [ -f "${PIN_DIR}/value" ]; then
+        printf "Pin ${PIN} exported to ${PIN_DIR}\n\n"
+    else
+        printf "ERROR: Failed to export pin ${PIN}"
+        exit 1
+    fi
+fi
+
+VALUE=$(cat "${PIN_DIR}/value")
+
+printf "Pin ${PIN} value = ${VALUE}\n\n"
+
